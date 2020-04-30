@@ -1,7 +1,10 @@
 import React from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { voteAnecdote } from '../reducers/anecdoteReducer'
+import {notificationOn, notificationOff} from '../reducers/notificationReducer'
 import Notification from './Notification'
+
+
 
 const Anecdote = ({ anecdote, handleClick }) => {
   return (
@@ -16,6 +19,7 @@ const Anecdote = ({ anecdote, handleClick }) => {
 }
 
 const AnecdoteList = () => {
+  const dispatch = useDispatch()
   const sortByMostVotes = (anecdotes) => {
     //  to be consistent through multiples renders in case of equality in nb of votes
     //  we decide of an order based on the content if votes are equals
@@ -28,9 +32,13 @@ const AnecdoteList = () => {
   // useSelector returns refernce / shallow copy and sorting mutate original array
   //  to avoid changing state with sorting, need deep copy value in new array arr.slice or [...arr]
   const anecdotes = sortByMostVotes(useSelector((state) => [...state.anecdotes]))
-  const dispatch = useDispatch()
-
-
+  const voteFor = (anecdote) => {
+    setTimeout(() => {
+      dispatch(notificationOff())
+    }, 5000)
+    dispatch(notificationOn(`you voted '${anecdote.content}'`)) 
+    dispatch(voteAnecdote(anecdote.id))
+  }
 
   return (
     <div>
@@ -40,7 +48,7 @@ const AnecdoteList = () => {
         <Anecdote
           key={anecdote.id}
           anecdote={anecdote}
-          handleClick={() => dispatch(voteAnecdote(anecdote.id))}
+          handleClick={() => voteFor(anecdote)}
         />
       ))}
     </div>
