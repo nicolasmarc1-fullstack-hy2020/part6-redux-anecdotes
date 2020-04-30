@@ -1,10 +1,12 @@
 import anecdoteReducer from './reducers/anecdoteReducer'
+import notificationReducer from './reducers/notificationReducer'
 import { createStore, combineReducers } from 'redux'
 import {composeWithDevTools} from 'redux-devtools-extension'
 
 
 const reducer = combineReducers({
-  anecdotes: anecdoteReducer
+  anecdotes: anecdoteReducer,
+  notification :notificationReducer
 })
 
 
