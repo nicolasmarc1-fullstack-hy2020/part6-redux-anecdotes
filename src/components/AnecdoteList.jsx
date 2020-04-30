@@ -15,9 +15,6 @@ const Anecdote = ({ anecdote, handleClick }) => {
 }
 
 const AnecdoteList = () => {
-  const anecdotes = useSelector((state) => state)
-  const dispatch = useDispatch()
-
   const sortByMostVotes = (anecdotes) => {
     //  to be consistent through multiples renders in case of equality in nb of votes
     //  we decide of an order based on the content if votes are equals
@@ -27,11 +24,17 @@ const AnecdoteList = () => {
         : b.votes - a.votes
     )
   }
+  // useSelector returns refernce / shallow copy and sorting mutate original array
+  //  to avoid changing state with sorting, need deep copy value in new array arr.slice or [...arr]
+  const anecdotes = sortByMostVotes(useSelector((state) => [...state.anecdotes]))
+  const dispatch = useDispatch()
+
+
 
   return (
     <div>
       <h2>Anecdotes</h2>
-      {sortByMostVotes(anecdotes).map((anecdote) => (
+      {anecdotes.map((anecdote) => (
         <Anecdote
           key={anecdote.id}
           anecdote={anecdote}
